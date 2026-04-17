@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PESTOLANTE Resume</title>
+    
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+
+    <style>
+        /* cool intro animation */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff;
+            z-index: 9999; /* making sure absolutely nothing sits on top of this */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: overlayFade 6s forwards; /* kick off the fade out */
+        }
+
+        #intro-overlay img {
+            max-width: 80vw;
+            max-height: 80vh;
+            object-fit: contain;
+            opacity: 0;
+            animation: imageFade 6s forwards;
+        }
+
+        /* timing the logo fade to look cinematic */
+        @keyframes imageFade {
+            0%, 16% { opacity: 0; }        /* wait a sec before showing up */
+            33%, 66% { opacity: 1; }       /* showing up */
+            83%, 100% { opacity: 0; }      /* fade out smoothly */
+        }
+
+        /* white screen fade to seeing the page */
+        @keyframes overlayFade {
+            0%, 83% { opacity: 1; visibility: visible; }
+            100% { opacity: 0; visibility: hidden; } /* now we can see the resume */
+        }
+
+        /* parallax background layer */
+        #parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 150vh; /* taller than the screen so we dont run out of image when scrolling */
+            background-image: url('https://cdn.imgchest.com/files/6ccd9668b01a.png');
+            background-size: cover;
+            background-position: center top;
+            z-index: -1; /* keep it way in the back */
+            pointer-events: none; /* so it doesnt block the user from clicking links or highlighting text */
+        }
+
+        /* ui style and such */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 60px 20px; 
+            min-height: 100vh;
+            background-color: #f4f4f9; /* bg color just in case the image breaks */
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto; /* center the resume block */
+            background: rgba(255, 255, 255, 0.95); /* slight glass effect so the background peeks through the resume */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* flexbox for the header layout */
+        header {
+            display: flex;
+            align-items: center; 
+            gap: 30px; 
+            border-bottom: 2px solid #e0e6ed;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .profile-pic img {
+            width: 130px;
+            height: 130px;
+            border-radius: 8px; /* sightly rounded square */
+            object-fit: cover; 
+            border: 3px solid #6b2e31; /* matches my chosen accent color */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-text {
+            flex: 1; /* removes the remaining horizontal space next to the photo */
+        }
+        
+        h1 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        /* making the section titles pop */
+        h2.section-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #6b2e31;
+            display: inline-block;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: flex-start; 
+            gap: 15px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            flex-wrap: wrap; /* wraps to the next line if the screen gets too small */
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        /* keeping the experience/education parts tidy and arranged */
+        .item {
+            margin-bottom: 20px;
+        }
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+        .item-title {
+            font-weight: bold;
+            color: #34495e;
+            font-size: 1.1em;
+        }
+        .item-dates {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            background: #eef2f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .item-subtitle {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        ul, ol {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        /* skills placed in containers for a more eye catching emphasis on me */
+        ul.skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 0;
+            list-style-type: none; 
+        }
+        li.skill-tag {
+            background-color: #6b2e31;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        /* for mobile comatability !! */
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column; /* vertical mode */
+                text-align: center;
+                gap: 15px;
+            }
+            .contact-info {
+                justify-content: center; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay">
+        <img src="https://cdn.imgchest.com/files/ea2d37b96c1e.png" alt="Intro Logo">
+    </div>
+
+    <div id="parallax-bg"></div>
+
+    <div class="container">
+        
+        <header>
+            <div class="profile-pic">
+                <img src="https://cdn.imgchest.com/files/2c58cf672639.png" alt="Chezter Jhon M. Pestolante Profile Picture">
+            </div>
+            <div class="header-text">
+                <h1>CHEZTER JHON M. PESTOLANTE</h1>
+                <div class="contact-info">
+                    <span>📍 Suarez, Iligan City, Lanao Del Norte</span>
+                    <span>📞 (+63)09936795383</span>
+                    <span>📧 chezterp@gmail.com</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="section">
+            <h2 class="section-title">Objective</h2>
+            <p><strong>Dedicated emerging professional</strong> driven to utilize <strong>artistic expertise and visual storytelling</strong> as a catalyst for company improvement. Focused on merging technical proficiency with creative vision to produce high-impact results that sharpen the company's competitive edge.</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Education</h2>
+            <div class="item">
+                <div class="item-header">
+                    <span class="item-title">Bachelor of Science in Computer Engineering</span>
+                    <span class="item-dates">2024 - Present</span>
+                </div>
+                <div class="item-subtitle">Mindanao State University - Iligan Institute of Technology</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Skills</h2>
+            <ul class="skills-container">
+                <li class="skill-tag">UI/UX design</li>
+                <li class="skill-tag">Problem-solving</li>
+                <li class="skill-tag">Communication</li>
+                <li class="skill-tag">Time Management</li>
+                <li class="skill-tag">Adaptability</li>
+                <li class="skill-tag">Analytical thinking</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Work Experience</h2>
+            
+            <div class="item">
+                <div class="item-header">
+                    <span class="item-title">Illustrator</span>
+                    <span class="item-dates">October, 2025 – Present</span>
+                </div>
+                <div class="item-subtitle">MSU-IIT's Titans Esports</div>
+                <ul>
+                    <li>Spearheading the creation of high-fidelity illustrations and digital assets for MSU-IIT’s esports organization.</li>
+                    <li>Developed a diverse library of character art and promotional graphics used across social media.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Reference</h2>
+            <p><strong>Jun Rill G. Relosa</strong><br>
+            Shoutcaster, MSU-IIT's Titans Esports<br>
+            Contact: (+63)09297442433</p>
+        </div>
+
+    </div>
+
+    <script>
+		// thank you GitHub for the script !!
+        // initialize lenis for that modern scroll feel
+        const lenis = new Lenis({
+            duration: 1.2, 
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+        });
+
+        // standard animation loop to keep the scrolling calculations smooth
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // parallax background logic 
+        // basically just grabbing the background div and moving it slightly upwards as the user scrolls down
+        // multiplying by 0.3 means it moves at 30% the speed of the normal scroll
+        const parallaxBg = document.getElementById('parallax-bg');
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            parallaxBg.style.transform = `translateY(-${scrollY * 0.3}px)`;
+        });
+    </script>
+</body>
+</html>
